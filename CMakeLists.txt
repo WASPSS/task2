@@ -16,3 +16,12 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+
+###########
+## Build ##
+###########
+include_directories(include  ${catkin_INCLUDE_DIRS})
+include_directories(
+  ${Eigen_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
+)
