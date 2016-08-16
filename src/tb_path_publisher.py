@@ -52,15 +52,8 @@ def new_goal_list_callback(data):
 #status = 4 -> failed
 #status = 3 -> completed
 def goal_status_callback(data):
-	global goal_flag
-	#Turn the goal_flag True only when the goal is accepted.
-	if (data.status_list[0].status == 1):
-		goal_flag = True
-	#Check if the newly accepted goal is aborted or finished and the goal_flag
-	#is true indicating that this status is of newly accepted goal else we will
-	#always publish 0 for Previously completed goals and our goal list turns
-	#empty without processign any goal.
-	if(((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3)) and (goal_flag == True)):
+	#Check if the newly accepted goal is aborted or finished and publish the index of node
+	if(((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3))):
 		#current accomplished goal
 		global goal_index
 		pub1.publish(goal_index)

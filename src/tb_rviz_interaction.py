@@ -100,10 +100,6 @@ def completed_cb(data):
         goals.pop(element_num)
         #Clear the map
         clear_map()
-        #Update Markers on RViz
-        update_markers(goals, completed_goals)
-        #Update the list of goals to be published to tb_path_publisher
-        update_pose_list(goals)
     else:
         # If this is printed than there is a problem in tb_path_publisher;
         # it is publishing element index out of range..
