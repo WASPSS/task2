@@ -57,7 +57,6 @@ def goal_status_callback(data):
 		#current accomplished goal
 		global goal_index
 		pub1.publish(goal_index)
-		goal_flag = False
 
 
 # Intializes everything
