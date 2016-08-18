@@ -60,21 +60,23 @@ def new_goal_list_callback(data):
 def goal_status_callback(data):
 	global goal_flag
 	check_1 = rospy.get_rostime().secs - time_check.secs
-	if ((data.status_list[0].status == 1)|(check_1 >= 6 )):
-		goal_flag = True
-	print check_1
-	#Check if the newly accepted goal is aborted or finished and the goal_flag
-	#is true indicating that this status is of newly accepted goal else we will
-	#always publish 0 for Previously completed goals and our goal list turns
-	#empty without processign any goal.
-	'''
-	remove the flag.
-	'''
-	if(((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3)) and (goal_flag == True)):
-		#current accomplished goal
-		global goal_index
-		pub1.publish(goal_index)
-		goal_flag = False
+	if len(data.status_list)!=0:
+		if ((data.status_list[0].status == 1)|(check_1 >= 6 )):
+			goal_flag = True
+		print check_1
+		#Check if the newly accepted goal is aborted or finished and the goal_flag
+		#is true indicating that this status is of newly accepted goal else we will
+		#always publish 0 for Previously completed goals and our goal list turns
+		#empty without processign any goal.
+		'''
+		remove the flag.
+		'''
+
+		if(((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3)) and (goal_flag == True)):
+			#current accomplished goal
+			global goal_index
+			pub1.publish(goal_index)
+			goal_flag = False
 
 
 # Intializes everything
