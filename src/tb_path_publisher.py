@@ -31,7 +31,13 @@ goal_to_publish = PoseStamped()
 def new_goal_list_callback(data):
 	#A global message is used in thought that it will be helpful later if we do
 	#some processing
-	global goal_to_publish
+
+	global goal_to_publish, time_check
+	#print (data)
+
+	#Assign time to header stamp.
+	goal_to_publish.header.stamp = rospy.get_rostime()
+	time_check = goal_to_publish.header.stamp
 	#Assign time to header stamp.
 	goal_to_publish.header.stamp = rospy.get_rostime()
 	#Set Frame type as map, indcating these are coordinates with respect to map.
@@ -52,19 +58,32 @@ def new_goal_list_callback(data):
 #status = 4 -> failed
 #status = 3 -> completed
 def goal_status_callback(data):
-	#Check if the newly accepted goal is aborted or finished and publish the index of node
-	if(((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3))):
+	global goal_flag
+	check_1 = rospy.get_rostime().secs - time_check.secs
+	if ((data.status_list[0].status == 1)|(check_1 >= 6 )):
+		goal_flag = True
+	print check_1
+	#Check if the newly accepted goal is aborted or finished and the goal_flag
+	#is true indicating that this status is of newly accepted goal else we will
+	#always publish 0 for Previously completed goals and our goal list turns
+	#empty without processign any goal.
+	'''
+	remove the flag.
+	'''
+	if(((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3)) and (goal_flag == True)):
 		#current accomplished goal
 		global goal_index
 		pub1.publish(goal_index)
+		goal_flag = False
 
 
 # Intializes everything
 def start():
 	# Create Global Publishers
-	global pub1,pub2
+	global pub1,pub2, time_check
 	#Initialize current node with some name
 	rospy.init_node('tb_path_publisher')
+	time_check = rospy.get_rostime()
 	#Assigin publisher that publishes the index of the goal just accomplished
 	pub1 = rospy.Publisher('/goal_completed', Int16, queue_size=1)
 	#Assign Publisher that publishes the goal to the robot to move
